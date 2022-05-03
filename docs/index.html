@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> FFT-Wav-UpSampling    </title>
+<meta name="description" content="Converter audio wav file sampling rate from 44.1kH to 48kHz/96kHz and sampling rate to 2 times by FFT method." />
+<link href="style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-lg px-3 my-5 markdown-body">
+<h1> FFT-Wav-UpSampling    </h1>
+<p>Converter audio wav file sampling rate from 44.1kH to 48kHz/96kHz and sampling rate to 2 times by FFT method.<br /></p>
+<p><a href="https://github.com/shun60s/FFT-Wav-UpSampling2/">github repository</a><br /></p>
+
+<h2>contents   </h2>
+
+<p>Specify input wav file name as -i and output wav file name as -o. Or, specify input wav directory as -d.<br />
+Following are examples.<br /></p>
+
+<p>convert from 44.1kHz to 48KHz<br /></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+python convert44100to48000.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_48000Hz.wav
+</code></pre></div></div>
+<p>convert from 44.1kHz to 96KHz<br /></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+python convert44100to48000.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_96000Hz.wav -f 2
+</code></pre></div></div>
+<p>convert from 44.1kHz to 96KHz  24bit width<br /></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+python convert44100to48000.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_96000Hz_24bit.wav -f 2 -b 24
+</code></pre></div></div>
+<p>convert input wav directory files  to 48KHz<br /></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+python convert44100to48000.py -d sample_wav
+</code></pre></div></div>
+<p>convert sampling rate to 2 times<br /></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+python convert_2times.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_88200Hz.wav
+</code></pre></div></div>
+<p>convert sampling rate to 2 times 24bit width<br /></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+python convert_2times.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_88200Hz_24bit.wav -b 24
+</code></pre></div></div>
+
+<h2>combine method  </h2>
+
+<p>There are two method how to combine overlap portion from short-time inverse-FFT output.<br />
+One is window similar to Hann window (COWM). Another is simple linear cross (SDOM).<br />
+SDOM is more jitter than COWM.<br />
+The method can be specified as -m. Default is COWM.<br /></p>
+
+
+
+<h2>License    </h2>
+<p>MIT<br /></p>
+
+
+
+</div>
+</body>
+</html>

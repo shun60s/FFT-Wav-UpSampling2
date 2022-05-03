@@ -31,6 +31,15 @@ convert sampling rate to 2 times 24bit width
 python convert_2times.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_88200Hz_24bit.wav -b 24
 ```
 
+## combine method  
+
+There are two method how to combine overlap portion from short-time inverse-FFT output.  
+One is window similar to Hann window (COWM). Another is simple linear cross (SDOM).  
+SDOM is more jitter than COWM.  
+The method can be specified as -m. Default is COWM.  
+
+
+
 ## License    
 MIT  
 
