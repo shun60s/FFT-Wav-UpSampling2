@@ -1,5 +1,5 @@
 #  FFT-Wav-UpSampling    
-Converter audio wav file samplimg rate from 44.1kH to 48kHz/96kHz and samplimg rate to 2 times by FFT method.  
+Converter audio wav file sampling rate from 44.1kH to 48kHz/96kHz and sampling rate to 2 times by FFT method.  
 
 ## contents   
 
