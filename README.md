@@ -36,7 +36,7 @@ A GUI to convert
 ```
 python gui_sampling_rate_converter.py
 ```
-![figure_gui](doc/gui_gamen.png)  
+![figure_gui](docs/gui_gamen.png)  
 
 
 
