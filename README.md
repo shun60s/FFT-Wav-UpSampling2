@@ -31,6 +31,15 @@ convert sampling rate to 2 times 24bit width
 python convert_2times.py -i sample_wav/test_44100Hz.wav -o sample_wav/test_88200Hz_24bit.wav -b 24
 ```
 
+
+A GUI to convert   
+```
+python gui_sampling_rate_converter.py
+```
+![figure_gui](doc/gui_gamen.png)  
+
+
+
 ## combine method  
 
 There are two method how to combine overlap portion from short-time inverse-FFT output.  
