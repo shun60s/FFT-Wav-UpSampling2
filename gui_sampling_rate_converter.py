@@ -15,6 +15,7 @@
 import os
 import sys
 import glob
+import re
 import datetime
 import argparse
 import threading
@@ -261,11 +262,34 @@ class GUI_App(ttk.Frame):
     class IORedirector(object):
         def __init__(self, text_area):
             self.text_area = text_area
+            self.line_flag = False
             
     class StdoutRedirector(IORedirector):
         def write(self,st):
-            self.text_area.insert('end', st)
+            if 1: # esc-r
+                # check if there is num/num in st
+                if re.search(r' \d+/\d+',st) is not None:
+                    #
+                    if not self.line_flag:  # start...
+                        self.text_area.insert('end',  st)
+                        self.text_area.insert('end', "\n") # make index up
+                        self.line_flag=True
+                    else:
+                        # delete last 1 line 
+                        self.text_area.delete("end-2l", "end-1l")
+                        #
+                        self.text_area.insert('end', st)
+                        self.text_area.insert('end', "\n") # make index up
+                else:
+                    #self.text_area.insert('end', pos +'>' + st)
+                    self.text_area.insert('end',  st )
+                    if st != "":
+                        self.line_flag = False  # reset line_flag
+            else:
+                self.text_area.insert('end',  st)
+            
             self.text_area.see("end")
+        
         
         def flush(self):
             pass
