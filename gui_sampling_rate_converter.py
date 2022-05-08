@@ -34,6 +34,10 @@ class GUI_App(ttk.Frame):
         self.frame=ttk.Frame.__init__(self,master)
         #
         #
+        self.open_file_init_dir=os.getcwd()
+        self.save_file_init_dir=os.getcwd()
+        self.open_dir_init_dir= os.getcwd()
+        
         self.enable_print = False #True
         #
         self.create_widgets()
@@ -170,25 +174,28 @@ class GUI_App(ttk.Frame):
         
         
     def open_file_button1_clicked(self,):
-        file_name = filedialog.askopenfilename(filetypes = [("WAV", ".wav")], initialdir=os.getcwd())
+        file_name = filedialog.askopenfilename(filetypes = [("WAV", ".wav")], initialdir=self.open_file_init_dir)
         if file_name:
             self.openfile1.set(file_name)
+            self.open_file_init_dir= os.path.dirname(file_name)
             if self.enable_print:
                 print ('openfile ', self.openfile1.get())
         
         
     def save_file_button1_clicked(self,):
-        file_name = filedialog.asksaveasfilename(filetypes = [("WAV", ".wav")],initialdir=os.getcwd(), defaultextension = "wav")
+        file_name = filedialog.asksaveasfilename(filetypes = [("WAV", ".wav")],initialdir=self.save_file_init_dir, defaultextension = "wav")
         if file_name:
             self.savefile1.set(file_name)
+            self.save_file_init_dir= os.path.dirname(file_name)
             if self.enable_print:
                 print ('savefile ', self.savefile1.get())
 
         
     def open_dir_button1_clicked(self,):
-        file_dir = filedialog.askdirectory(initialdir=os.getcwd())
+        file_dir = filedialog.askdirectory(initialdir=self.open_dir_init_dir)
         if file_dir:
             self.opendir1.set(file_dir)
+            self.open_dir_init_dir= file_dir
             if self.enable_print:
                 print ('opendir ', self.opendir1.get())
         
@@ -197,6 +204,7 @@ class GUI_App(ttk.Frame):
         #
         self.button1['text']=('in process')
         self.button1.configure(state=DISABLED)
+        self.text.delete('1.0','end') # clear TEXT BOX AT ONCE
         if self.enable_print:
             print ('button1 was clicked')
             print ('openfile', self.openfile1.get())
