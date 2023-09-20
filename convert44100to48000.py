@@ -9,6 +9,7 @@
 # scipy 1.4.1
 # soundfile 0.10.3
 #  ------------------------------------------------------------
+# 2023/9/19  add: gain_adjust option: gain up 1,2,or,3 dB until non-clip
 
 import sys
 import os
@@ -25,7 +26,7 @@ from scipy.io.wavfile import write as wavwrite
 
 
 class convert441to480(object):
-    def __init__(self,path_input_wav, path_output_wav=None, output_bit=16, factor=1, method="COWM"):
+    def __init__(self,path_input_wav, path_output_wav=None, output_bit=16, factor=1, method="COWM", gain_adjust=False):
         # initalize
         self.wavfile= path_input_wav    # input wav file name
         if path_output_wav is None:
@@ -132,6 +133,23 @@ class convert441to480(object):
             print ("Error: there is no such method.", self.method )
             sys.exit()
             
+        # gain adjustment
+        MAX_ADJUST_GAIN=3
+        if gain_adjust:
+            peak0=np.max(np.abs(self.wavo))
+            gain0=0
+            for i in range(1,int(MAX_ADJUST_GAIN+1)):  # 1,2,3
+                if peak0 * np.power(10, i /20.0) >= 1.0:  # when clip
+                    break
+                else:   # when non clip
+                    gain0=gain0+1
+                
+            if gain0 > 0:
+                self.wavo=self.wavo* np.power(10, gain0 /20.0)
+                print("gain up ", gain0, " dB")
+            else:
+                print("gain no adjust")
+        
         # write output wav
         if self.output_bit == 16:
             self.save_wav16(self.wavfile2, self.wavo, sr= int(self.target * self.factor) )
@@ -383,7 +401,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_bit', '-b', type=int, default=16, help='output bit 16 or 24 (defualt 16bit)')
     parser.add_argument('--dir', '-d', default=None, help='specify input wav directory. This is alternative of --output_wav.')
     parser.add_argument('--method', '-m', type=str, default='COWM', help='specify method COWM or SDOM (default COWM) ')
-    
+    parser.add_argument('--gain_adjust', '-a', action='store_true', help='if set true, gain up 1,2, or 3 dB until non-clip')
     args = parser.parse_args()
     
     # record start time
@@ -394,12 +412,12 @@ if __name__ == '__main__':
         
         for i,file_path in enumerate(flist):
             # create instance
-            conv1= convert441to480(file_path, output_bit=args.output_bit, factor=args.factor, method=args.method)
+            conv1= convert441to480(file_path, output_bit=args.output_bit, factor=args.factor, method=args.method, gain_adjust=args.gain_adjust)
             # destruct instance
             del conv1
     else: # do once
         # create instance
-        conv1= convert441to480(args.input_wav, args.output_wav, output_bit=args.output_bit, factor=args.factor, method=args.method )
+        conv1= convert441to480(args.input_wav, args.output_wav, output_bit=args.output_bit, factor=args.factor, method=args.method, gain_adjust=args.gain_adjust )
     
     # record finish time
     dt_now1 = datetime.datetime.now()

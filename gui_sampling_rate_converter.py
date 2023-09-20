@@ -11,6 +11,7 @@
 # scipy 1.8.0
 # soundfile 0.10.3
 #  -----------
+# 2023/9/19  add: gain_adjust option: gain up 1,2,or,3 dB until non-clip
 
 import os
 import sys
@@ -141,8 +142,19 @@ class GUI_App(ttk.Frame):
         self.method1_rb1.grid(row=gyou, column=1)
         self.method1_rb2.grid(row=gyou, column=2)
         
-        self.frame4.pack(fill = X)
+        # Radiobutton 3
+        gyou=gyou+1
+        self.label5= ttk.Label(self.frame4, text='gain adjust',width=30)
         
+        self.gain1 = StringVar()
+        self.gain1_rb1 = ttk.Radiobutton(self.frame4, text='OFF',value='OFF', variable=self.gain1, width=10)
+        self.gain1_rb2 = ttk.Radiobutton(self.frame4, text='ON',value='ON', variable=self.gain1, width=10)
+        self.gain1.set('OFF')
+        self.label5.grid(row=gyou, column=0)
+        self.gain1_rb1.grid(row=gyou, column=1)
+        self.gain1_rb2.grid(row=gyou, column=2)
+        
+        self.frame4.pack(fill = X)
         #######################################################################################
         
         self.frame6=ttk.Frame(self.frame)
@@ -212,6 +224,7 @@ class GUI_App(ttk.Frame):
             print ('opendir', self.opendir1.get())
             print ('output witdth bit', self.bit1.get())
             print ('method', self.method1.get())
+            print ('gain adjust', self.gain1.get())
         
         # call as a callback
         self.callback1()
@@ -219,6 +232,12 @@ class GUI_App(ttk.Frame):
         
     def process1(self,):
         #
+        # check if gain adjust
+        if self.gain1.get() == "ON":
+            self.gain_adjust=True
+        else:
+            self.gain_adjust=False
+        
         # record start time
         dt_now0 = datetime.datetime.now()
         if self.opendir1.get() != ""  and os.path.exists(self.opendir1.get()):
@@ -227,11 +246,11 @@ class GUI_App(ttk.Frame):
             for i,file_path in enumerate(flist):
                 # create instance
                 if self.combo_v0.get() == self.value0[0]:
-                    conv1= convert441to480(file_path, factor=1, output_bit=int(self.bit1.get()), method=self.method1.get())
+                    conv1= convert441to480(file_path, factor=1, output_bit=int(self.bit1.get()), method=self.method1.get(), gain_adjust=self.gain_adjust)
                 elif self.combo_v0.get() == self.value0[1]:
-                    conv1= convert441to480(file_path, factor=2, output_bit=int(self.bit1.get()), method=self.method1.get())
+                    conv1= convert441to480(file_path, factor=2, output_bit=int(self.bit1.get()), method=self.method1.get(), gain_adjust=self.gain_adjust)
                 elif self.combo_v0.get() == self.value0[2]:
-                    conv1= convert2times(file_path, output_bit=int(self.bit1.get()), method=self.method1.get())
+                    conv1= convert2times(file_path, output_bit=int(self.bit1.get()), method=self.method1.get(),  gain_adjust=self.gain_adjust)
                 # destruct instance
                 del conv1
         
@@ -244,11 +263,11 @@ class GUI_App(ttk.Frame):
                     
                 # create instance
                 if self.combo_v0.get() == self.value0[0]:
-                    conv1= convert441to480(self.openfile1.get(), savefile0, factor=1, output_bit=int(self.bit1.get()), method=self.method1.get())
+                    conv1= convert441to480(self.openfile1.get(), savefile0, factor=1, output_bit=int(self.bit1.get()), method=self.method1.get(), gain_adjust=self.gain_adjust)
                 elif self.combo_v0.get() == self.value0[1]:
-                    conv1= convert441to480(self.openfile1.get(), savefile0, factor=2, output_bit=int(self.bit1.get()), method=self.method1.get())
+                    conv1= convert441to480(self.openfile1.get(), savefile0, factor=2, output_bit=int(self.bit1.get()), method=self.method1.get(), gain_adjust=self.gain_adjust)
                 elif self.combo_v0.get() == self.value0[2]:
-                    conv1= convert2times(self.openfile1.get(), savefile0, output_bit=int(self.bit1.get()), method=self.method1.get())
+                    conv1= convert2times(self.openfile1.get(), savefile0, output_bit=int(self.bit1.get()), method=self.method1.get(), gain_adjust=self.gain_adjust)
                 del conv1
             
         # record finish time
